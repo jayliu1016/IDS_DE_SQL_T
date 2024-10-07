@@ -1,26 +1,34 @@
-"""
-Transforms and Loads data into the local SQLite3 database
-Example:
-,general name,count_products,ingred_FPro,avg_FPro_products,avg_distance_root,ingred_normalization_term,semantic_tree_name,semantic_tree_node
-"""
 import sqlite3
 import csv
 import os
 
-#load the csv file and insert into a new sqlite3 database
-def load(dataset="/workspaces/sqlite-lab/data/GroceryDB_IgFPro.csv"):
-    """"Transforms and Loads data into the local SQLite3 database"""
+# Load the csv file and insert it into a new SQLite3 database
+def load(dataset="/Users/liuliangcheng/Desktop/Duke/IDS_DE/IDS_DE_SQL_T/US_birth.csv"):
+    """Transforms and Loads data into the local SQLite3 database"""
 
-    #prints the full working directory and path
+    # Prints the full working directory and path
     print(os.getcwd())
     payload = csv.reader(open(dataset, newline=''), delimiter=',')
-    conn = sqlite3.connect('GroceryDB.db')
+    conn = sqlite3.connect('BirthDataDB.db')
     c = conn.cursor()
-    c.execute("DROP TABLE IF EXISTS GroceryDB")
-    c.execute("CREATE TABLE GroceryDB (id,general_name, count_products, ingred_FPro, avg_FPro_products, avg_distance_root, ingred_normalization_term, semantic_tree_name, semantic_tree_node)")
-    #insert
-    c.executemany("INSERT INTO GroceryDB VALUES (?,?, ?, ?, ?, ?, ?, ?, ?)", payload)
+    
+    # Drop the existing table if it exists and create a new one with the correct columns
+    c.execute("DROP TABLE IF EXISTS BirthDataDB")
+    c.execute("""
+        CREATE TABLE BirthDataDB (
+            year INTEGER, 
+            month INTEGER, 
+            date_of_month INTEGER, 
+            day_of_week INTEGER, 
+            births INTEGER
+        )
+    """)
+    
+    # Insert data into the table
+    c.executemany("INSERT INTO BirthDataDB VALUES (?, ?, ?, ?, ?)", payload)
     conn.commit()
     conn.close()
-    return "GroceryDB.db"
+    
+    return "BirthDataDB.db"
+
 
