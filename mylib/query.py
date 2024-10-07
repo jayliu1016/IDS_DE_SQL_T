@@ -15,7 +15,8 @@ def query():
 
     # Perform INSERT only if the record does not already exist
     cursor.execute(
-        "SELECT COUNT(*) FROM BirthDataDB WHERE year = 2000 AND month = 1 AND date_of_month = 15"
+        "SELECT COUNT(*) FROM BirthDataDB WHERE year = 2000 AND month = 1"
+        "AND date_of_month = 15"
     )
     if cursor.fetchone()[0] == 0:
         cursor.execute(
